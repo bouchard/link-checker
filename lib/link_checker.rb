@@ -30,7 +30,7 @@ class LinkChecker
   # Find a list of HTML files in the @target path, which was set in the {#initialize} method.
   def html_file_paths
     Find.find(@target).map {|path|
-      FileTest.file?(path) && (path =~ /\.html?$/) ? path : nil
+      FileTest.file?(path) && (path =~ /#{@options[:file_regex]}/) ? path : nil
     }.reject{|path| path.nil? }
   end
 
@@ -71,7 +71,7 @@ class LinkChecker
               # If the redirect is relative we need to build a new uri
               # using the current uri as a base.
               URI.join("#{uri.scheme}://#{uri.host}:#{uri.port}", response['location'])
-            end          
+            end
           return self.check_uri(uri, true)
         else
           return Error.new(:uri_string => uri.to_s, :error => response)
@@ -167,7 +167,7 @@ class LinkChecker
       report_results(page_name, results)
     end
   end
-  
+
   # Report the results of scanning one HTML page.
   #
   # @param page_name [String] The name of the page.
